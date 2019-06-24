@@ -23,59 +23,55 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
         public static int FindDigit(string equation)
         {
             // Add your code here.
-            float n1,n2,ans;
-            String temp1=null,temp2=null;
-            int p=equation.Length;
-            var x=equation.IndexOf('*');
-            var a=equation.Substring(0,x);
-            var y=equation.IndexOf('=');
-            //Console.WriteLine(y);
-            y=y-x-1;
-            var b=equation.Substring(x+1,y);
-             y=equation.IndexOf('=');
-            var z=p-y;
-            var c=equation.Substring(y+1,z-1);
+           float var1=0,var2=0,ans;
+            int finalAns=0;
+            String exp_ans=null,incomp_ans=null;
+            int len=equation.Length;
+            var IndexOfMulti=equation.IndexOf('*');
+            var IndexOfEqual=equation.IndexOf('=');
+            var z=IndexOfEqual-IndexOfMulti-1;
+            //equation = "a*b=c"
+            var a=equation.Substring(0,IndexOfMulti);
+            var b=equation.Substring(IndexOfMulti+1,z);
+            z=len-IndexOfEqual;
+            var c=equation.Substring(IndexOfEqual+1,z-1);
             if(c.Contains('?'))
             {
-                n1=float.Parse(a);
-                n2=float.Parse(b);
-                ans=n1*n2;
-                temp1=ans.ToString();
-                temp2=c.ToString();
-            }
-            else if(a.Contains('?'))
-            {
-                n1=float.Parse(b);
-                n2=float.Parse(c);
-                ans=n2/n1;
-                temp1=ans.ToString();
-                temp2=a.ToString();
-            }
-             else if(b.Contains('?'))
-            {
-                n1=float.Parse(a);
-                n2=float.Parse(c);
-                ans=n2/n1;
-                temp1=ans.ToString();
-                temp2=b.ToString();
-            }
-            if (temp1.Length == temp2.Length)
-            {
-                for(int i=0;i<temp1.Length ;i++)
-                { 
-                    
-                    if (temp1[i] != temp2[i])
-                    {
-                        return int.Parse(temp1[i].ToString());
-                    }
-                }
+                float.TryParse(a,out var1);
+                float.TryParse(b,out var2);
+                ans=var1*var2;
+                exp_ans=ans.ToString();
+                incomp_ans=c.ToString();
             }
             else
             {
-                return -1;
+                if(a.Contains('?')){
+                float.TryParse(b,out var1);
+                incomp_ans=a;}
+                else if(b.Contains('?')){
+                float.TryParse(a,out var1);
+                incomp_ans=b;}
+                float.TryParse(c,out var2);
+                ans=var2/var1;
+                exp_ans=ans.ToString();
+            } 
+            if (incomp_ans.Contains('?') && exp_ans.Length>0 && exp_ans.Length == incomp_ans.Length)
+            {
+                for(int i=0;i<exp_ans.Length ;i++)
+                { 
+                    if (exp_ans[i] != incomp_ans[i])  
+                    {
+                        if( incomp_ans[i]=='?')
+                        {
+                          int.TryParse(exp_ans[i].ToString(),out finalAns);
+                          return finalAns;
+                        }
+                        else 
+                        return -1;
+                    }
+                }
             }
-
-            throw new NotImplementedException();
+        return -1;       
         }
     }
 }
